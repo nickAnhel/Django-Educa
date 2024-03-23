@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
+from .fields import OrderField
+
 
 # Models to structure the platform
 
@@ -40,9 +42,13 @@ class Module(models.Model):
 
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
+    order = OrderField(blank=True, for_fields=["course"])
+
+    class Meta:
+        ordering = ["order"]
 
     def __str__(self) -> str:
-        return self.title
+        return f"{self.order}. {self.title}"
 
 
 # Models for content storaging
@@ -55,6 +61,11 @@ class Content(models.Model):
     )
     object_id = models.PositiveIntegerField()
     item = GenericForeignKey("content_type", "object_id")
+
+    order = OrderField(blank=True, for_fields=["module"])
+
+    class Meta:
+        ordering = ["order"]
 
 
 class ItemBase(models.Model):
