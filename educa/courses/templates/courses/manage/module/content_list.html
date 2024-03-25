@@ -88,18 +88,40 @@
     })[0].addEventListener("sortupdate", function(e) {
         let modulesOrder = {};
         let modules = document.querySelectorAll("#modules li");
+
         modules.forEach(function(module, index) {
             // Update module index
             modulesOrder[module.dataset.id] = index;
 
             // Update index in HTML
-            module.querySelector(".order").innerHTML = `MODULE ${index + 1}`;
+            module.querySelector(".order").innerHTML = index + 1;
 
             // Add new order to Http request options
             options["body"] = JSON.stringify(modulesOrder);
 
             // Fetch Http reguest
             fetch(moduleOrderUrl, options);
+        });
+    });
+
+    const contentOrderUrl = '{% url "content_order" %}';
+
+    sortable("#module-contents", {
+        forcePlaceholderSize: true,
+        placeholderClass: "placeholder",
+    })[0].addEventListener("sortupdate", function(e) {
+        let contentOrder = {};
+        let contents = document.querySelectorAll("#module-contents div");
+
+        contents.forEach(function(content, index) {
+            // Update content index
+            contentOrder[content.dataset.id] = index;
+
+            // Add new order to Http request options
+            options["body"] = JSON.stringify(contentOrder);
+
+            // Fetch Http reguest
+            fetch(contentOrderUrl, options);
         });
     });
 {% endblock domready %}
