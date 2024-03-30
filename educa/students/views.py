@@ -1,7 +1,11 @@
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import CreateView
+from django.views.generic import CreateView, FormView
+
+from .forms import CourseEnrollForm
 
 
 class StudentRegistrationView(CreateView):
@@ -17,3 +21,16 @@ class StudentRegistrationView(CreateView):
         login(self.request, user)
 
         return result
+
+
+class StudentEnrollCourseView(LoginRequiredMixin, FormView):
+    course = None
+    form_class = CourseEnrollForm
+
+    def form_valid(self, form) -> HttpResponse:
+        self.course = form.cleaned_data["course"]
+        self.course.students.add(self.request.user)
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse_lazy("student_course_detail", args=[self.course.id])
