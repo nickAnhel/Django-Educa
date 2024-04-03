@@ -12,6 +12,48 @@
     </div>
 {% endblock content %}
 
-{% block include_js %}{% endblock include_js %}
+{% block include_js %}
+    {{ course.id|json_script:"course-id" }}
+{% endblock include_js %}
 
-{% block domready %}{% endblock domready %}
+{% block domready %}
+const courseId = JSON.parse(
+    document.getElementById("course-id").textContent
+);
+
+const chatUrl = `ws://${window.location.host}/ws/chat/room/${courseId}/`;
+
+const chatSocket = new WebSocket(chatUrl);
+
+chatSocket.onmessage = function (event) {
+    const data = JSON.parse(event.data);
+    const chat = document.getElementById("chat");
+    chat.innerHTML += `<div class='message'> ${data.message} </div>`;
+    chat.scrollTop = chat.scrollHeight;
+};
+
+chatSocket.onclose = function (event) {
+    console.error("Chat socket closed unexpectedly");
+};
+
+const input = document.getElementById("chat-message-input");
+const submitButton = document.getElementById("chat-message-submit");
+
+submitButton.addEventListener("click", function (event) {
+    let message = input.value;
+    if (message) {
+        chatSocket.send(JSON.stringify({ "message": message }));
+        input.value = "";
+        input.focus();
+    }
+});
+
+input.addEventListener("keypress", function (event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        submitButton.click();
+    }
+});
+
+input.focus();
+{% endblock domready %}
