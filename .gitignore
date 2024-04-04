@@ -5,3 +5,6 @@ __pycache__
 .venv
 .env
 media
+uwsgi_app.sock
+data
+static
