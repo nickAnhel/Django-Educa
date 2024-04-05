@@ -1,5 +1,4 @@
-pythom3 -m venv .venv
-pip3 install -r requirements.txt
+md educa/ssl
+openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes -keyout ssl/educa.key -out ssl/educa.crt -subj '/CN=*.educaproject.com' -addext 'subjectAltName=DNS:*.educaproject.com'
 
-docker pull redis
-docker run -it --rm --name redis -p 6379:6379 redis
+docker compose up

@@ -8,3 +8,4 @@ media
 uwsgi_app.sock
 data
 static
+ssl
