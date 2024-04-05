@@ -26,7 +26,7 @@ const requestUser = JSON.parse(
     document.getElementById("request-user").textContent
 );
 
-const chatUrl = `ws://${window.location.host}/ws/chat/room/${courseId}/`;
+const chatUrl = `wss://${window.location.host}/ws/chat/room/${courseId}/`;
 
 const chatSocket = new WebSocket(chatUrl);
 

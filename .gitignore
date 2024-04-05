@@ -1,11 +1,13 @@
-__pycache__
 *.sqlite3
+uwsgi_app.sock
+daphne.sock
+daphne.sock.lock
+__pycache__
 .pylintrc
 .vscode
 .venv
 .env
 media
-uwsgi_app.sock
 data
 static
 ssl
